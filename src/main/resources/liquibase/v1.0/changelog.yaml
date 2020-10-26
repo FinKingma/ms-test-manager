@@ -1,0 +1,8 @@
+---
+databaseChangeLog:
+  - include:
+      file: install.sql
+      relativeToChangelogFile: true
+  - include:
+      file: sequence.sql
+      relativeToChangelogFile: true

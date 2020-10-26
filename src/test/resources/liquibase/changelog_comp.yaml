@@ -1,0 +1,4 @@
+databaseChangeLog:
+    - include:
+        file: create/teams.yaml
+        relativeToChangelogFile: true
