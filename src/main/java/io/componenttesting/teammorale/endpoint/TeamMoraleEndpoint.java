@@ -4,13 +4,11 @@ import io.componenttesting.teammorale.dao.TeamsDao;
 import io.componenttesting.teammorale.model.TeamsEntity;
 import io.componenttesting.teammorale.service.TeamMoraleService;
 import io.componenttesting.teammorale.vo.Team;
+import io.componenttesting.teammorale.vo.TeamEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,15 +19,16 @@ public class TeamMoraleEndpoint {
     @Autowired
     TeamsDao teamsDao;
 
-    @GetMapping("/{id}")
-    public Team getById(@PathVariable Integer id) {
-        Optional<TeamsEntity> result = teamsDao.findById(id);
+    @Autowired
+    TeamMoraleService teamMoraleService;
+
+    @GetMapping("/{name}")
+    public TeamsEntity getByName(@PathVariable String name) {
+        Optional<TeamsEntity> result = teamsDao.findByName(name);
         if (result.isPresent()) {
-            Team team = new Team();
-            team.setName(result.get().getName());
-            return team;
+            return result.get();
         } else {
-            throw new Error("AAHHHH");
+            throw new Error("did not find team " + name);
         }
     }
 
@@ -37,5 +36,15 @@ public class TeamMoraleEndpoint {
     public List<TeamsEntity> getAll() {
         List<TeamsEntity> result = teamsDao.findAll();
         return result;
+    }
+
+    @PostMapping()
+    public void createNewTeam(@RequestBody @Valid Team team) {
+        teamMoraleService.createNewTeam(team);
+    }
+
+    @PutMapping()
+    public void updateTeam(@RequestBody @Valid Team team) {
+        teamMoraleService.updateTeam(team);
     }
 }

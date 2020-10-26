@@ -39,10 +39,11 @@ public abstract class AbstractEvent {
         collector.forChannel(routingSource.output()).clear();
     }
 
-    protected void sendInEvent(String content) {
+    protected void sendInEvent(String teamName, String content) {
         routingSink.sourceOfTeamMorale().send(MessageBuilder.
                 withPayload(content).
-                setHeader("EventType", "INCOMING").
+                setHeader("eventType", "TEAM_EVENT").
+                setHeader("teamName", teamName).
                 build());
     }
 

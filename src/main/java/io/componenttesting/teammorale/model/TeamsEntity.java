@@ -1,7 +1,12 @@
 package io.componenttesting.teammorale.model;
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
 @Entity(name = "Teams")
 public class TeamsEntity {
 
@@ -16,27 +21,18 @@ public class TeamsEntity {
     @Column(nullable = false)
     private String vision;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(nullable = false)
+    private BigDecimal morale;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(nullable = false)
+    private BigDecimal happiness;
 
-    public String getName() {
-        return name;
-    }
+    @Column(nullable = false)
+    private Integer numberOfUpdates;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Column(nullable = false)
+    private LocalDateTime createdOn;
 
-    public String getVision() {
-        return vision;
-    }
-
-    public void setVision(String vision) {
-        this.vision = vision;
-    }
+    @Column(nullable = false)
+    private LocalDateTime lastUpdatedOn;
 }

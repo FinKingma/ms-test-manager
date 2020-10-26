@@ -5,17 +5,22 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.teammorale.dao.TeamsDao;
 import io.componenttesting.teammorale.event.EventPublisher;
+import io.componenttesting.teammorale.event.EventReceiver;
 import io.componenttesting.teammorale.model.TeamsEntity;
 import io.componenttesting.teammorale.vo.Team;
 import io.componenttesting.teammorale.vo.TeamEvent;
-import liquibase.pro.packaged.S;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class TeamMoraleService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(TeamMoraleService.class);
 
     @Autowired
     private TeamsDao teamsDao;
@@ -25,21 +30,52 @@ public class TeamMoraleService {
 
     private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    public void handleNewHappening(String content) throws JsonProcessingException {
+    public void handleNewHappening(String teamName, String content) throws JsonProcessingException {
         TeamEvent event = objectMapper.readValue(content, TeamEvent.class);
-        Optional<TeamsEntity> entity = teamsDao.findByName(event.getTeamName());
+        Optional<TeamsEntity> entity = teamsDao.findByName(teamName);
 
         if (entity.isPresent()) {
-            entity.get().setName(event.getTeamName());
-            entity.get().setVision(event.getHappening());
-            teamsDao.save(entity.get());
+            updateTeamBasedOnEvent(entity.get(), event);
+            eventPublisher.publishMessageEvent(teamName, "team has been updated");
         } else {
-            TeamsEntity newEntity = new TeamsEntity();
-            newEntity.setName(event.getTeamName());
-            newEntity.setVision(event.getHappening());
-            teamsDao.save(newEntity);
+            LOGGER.info("team {} does not exist, please use our amazing api to create a new team before using the event platform", teamName);
         }
+    }
 
-        eventPublisher.publishMessageEvent("yihaa");
+    private void updateTeamBasedOnEvent(TeamsEntity entity, TeamEvent event) {
+        LOGGER.info("updating team {}", event.getTeamName());
+        entity.setName(event.getTeamName());
+        entity.setVision(event.getHappening());
+        teamsDao.save(entity);
+    }
+
+    public void createNewTeam(Team team) {
+        TeamsEntity newEntity = new TeamsEntity();
+        newEntity.setName(team.getTeamName());
+        newEntity.setVision(team.getVision());
+        newEntity.setHappiness(team.getHappiness());
+        newEntity.setMorale(team.getMorale());
+        newEntity.setNumberOfUpdates(1);
+        newEntity.setCreatedOn(LocalDateTime.now());
+        newEntity.setLastUpdatedOn(LocalDateTime.now());
+
+        teamsDao.save(newEntity);
+
+        LOGGER.info("new team {} added", team.getTeamName());
+    }
+
+    public void updateTeam(Team team) {
+        Optional<TeamsEntity> entity = teamsDao.findByName(team.getTeamName());
+        if (entity.isPresent()) {
+            TeamsEntity updatedEntity = entity.get();
+
+            updatedEntity.setVision(team.getVision());
+            updatedEntity.setHappiness(team.getHappiness());
+            updatedEntity.setMorale(team.getMorale());
+            updatedEntity.setNumberOfUpdates(updatedEntity.getNumberOfUpdates()+1);
+            updatedEntity.setLastUpdatedOn(LocalDateTime.now());
+        } else {
+            throw new IllegalArgumentException("Team does not exist");
+        }
     }
 }

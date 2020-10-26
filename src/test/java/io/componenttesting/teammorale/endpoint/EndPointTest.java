@@ -1,9 +1,7 @@
 package io.componenttesting.teammorale.endpoint;
 
 import io.componenttesting.teammorale.dao.TeamsDao;
-import io.componenttesting.teammorale.endpoint.TeamMoraleEndpoint;
 import io.componenttesting.teammorale.model.TeamsEntity;
-import io.componenttesting.teammorale.vo.Team;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,9 +30,9 @@ public class EndPointTest {
     public void testGetTeamData() {
         TeamsEntity t = new TeamsEntity();
         t.setName("Fin");
-        when(dao.findById(1)).thenReturn(Optional.of(t));
+        when(dao.findByName("Fin")).thenReturn(Optional.of(t));
 
-        Team team = teamMoraleEndpoint.getById(1);
+        TeamsEntity team = teamMoraleEndpoint.getByName("Fin");
         assertEquals("Fin", team.getName());
     }
 }

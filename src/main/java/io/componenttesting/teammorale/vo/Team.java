@@ -1,23 +1,21 @@
 package io.componenttesting.teammorale.vo;
 
-public class Team {
+import lombok.Data;
 
-    private String name;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+
+@Data
+public class Team {
+    @NotNull
+    private String teamName;
+
+    @NotNull
     private String vision;
 
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    private BigDecimal happiness;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVision() {
-        return vision;
-    }
-
-    public void setVision(String vision) {
-        this.vision = vision;
-    }
+    @NotNull
+    private BigDecimal morale;
 }

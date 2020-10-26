@@ -21,11 +21,14 @@ public class EventPublisher {
         this.output = output;
     }
 
-    public boolean publishMessageEvent(final String message) {
+    public boolean publishMessageEvent(final String teamName, final String message) {
+        LOGGER.info("sending message for team {}:  {}", teamName, message);
+
         return output.send(
                 MessageBuilder.
                         withPayload(message).
                         setHeader("eventType", "CHECK_THIS").
+                        setHeader("teamName", teamName).
                         build());
     }
 }

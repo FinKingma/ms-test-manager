@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 
 @EnableBinding(TeamMoraleSink.class)
 public class EventReceiver {
@@ -22,18 +22,14 @@ public class EventReceiver {
 
     }
 
-    @StreamListener(TeamMoraleSink.APPLICATIONS_IN)
-    public void checkAndSortLoans(String content) {
-        LOGGER.info("message received: {}");
+    @StreamListener(value = TeamMoraleSink.APPLICATIONS_IN, condition = "headers['eventType'] =='TEAM_EVENT'")
+    public void teamMoraleProcessor(@Payload String content, @Header(name = "teamName") String teamName) {
+        LOGGER.info("message received for team {}: {}", teamName, content);
         try {
-            teamMoraleService.handleNewHappening(content);
+            teamMoraleService.handleNewHappening(teamName, content);
         } catch (Exception e) {
-            LOGGER.error("something happened: {}",e);
+            LOGGER.error("something tragic has happened: {}",e);
         }
-    }
-
-    private static final <T> Message<T> message(T val) {
-        return MessageBuilder.withPayload(val).build();
     }
 
 }

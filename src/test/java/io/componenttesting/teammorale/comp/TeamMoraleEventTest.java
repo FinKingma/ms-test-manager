@@ -2,6 +2,7 @@ package io.componenttesting.teammorale.comp;
 
 import io.componenttesting.teammorale.dao.TeamsDao;
 import io.componenttesting.teammorale.event.EventPublisher;
+import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -20,6 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("event_test")
@@ -28,14 +33,17 @@ public class TeamMoraleEventTest extends AbstractEvent {
     @Autowired
     private TeamsDao teamsDao;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    @LocalServerPort
+    private int port;
 
     @DisplayName("Just some test")
     @Test
     public void testStuff() {
+        String newTeam = getBody("newTeam.json");
+        given().body(newTeam).contentType(ContentType.JSON).when().post(String.format("http://127.0.0.1:%s/api/v1", port)).then().statusCode(is(200));
+
         String body = getBody("test.json");
-        sendInEvent(body);
+        sendInEvent("Fin", body);
         List<JsonPath> output = getOutputJson();
 
         Assertions.assertEquals(output.size(), 1);
