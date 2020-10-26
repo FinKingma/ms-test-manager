@@ -1,4 +1,6 @@
 {
   "teamName": "Fin",
-  "vision": "Being awesome"
+  "vision": "Being awesome",
+  "happiness": 3.2,
+  "morale": 4.1
 }

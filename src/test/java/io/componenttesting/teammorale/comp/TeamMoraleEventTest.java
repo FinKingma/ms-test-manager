@@ -40,7 +40,7 @@ public class TeamMoraleEventTest extends AbstractEvent {
     @Test
     public void testStuff() {
         String newTeam = getBody("newTeam.json");
-        given().body(newTeam).contentType(ContentType.JSON).when().post(String.format("http://127.0.0.1:%s/api/v1", port)).then().statusCode(is(200));
+        given().port(port).body(newTeam).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
 
         String body = getBody("test.json");
         sendInEvent("Fin", body);
