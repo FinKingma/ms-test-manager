@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @ImportAutoConfiguration(org.springframework.cloud.stream.test.binder.TestSupportBinderAutoConfiguration.class)
 public abstract class AbstractEvent {
 
-    @Autowired
-    private Source channels;
 
     @Autowired
     private MessageCollector collector;
@@ -36,10 +34,10 @@ public abstract class AbstractEvent {
     @Autowired
     private TeamMoraleSink routingSink;
 
-//    @BeforeEach
-//    public void before() {
-//        collector.forChannel(routingSource.output()).clear();
-//    }
+    @BeforeEach
+    public void before() {
+        collector.forChannel(routingSource.output()).clear();
+    }
 
     protected void sendInEvent(String content) {
         routingSink.sourceOfTeamMorale().send(MessageBuilder.
@@ -59,8 +57,8 @@ public abstract class AbstractEvent {
         return fileContent;
     }
 
-//    protected List<JsonPath> getOutputJson() {
-//        BlockingQueue<Message<?>> messages = collector.forChannel(routingSource.output());
-//        return messages.stream().map(m -> JsonPath.from(m.getPayload().toString())).collect(Collectors.toList());
-//    }
+    protected List<JsonPath> getOutputJson() {
+        BlockingQueue<Message<?>> messages = collector.forChannel(routingSource.output());
+        return messages.stream().map(m -> JsonPath.from(m.getPayload().toString())).collect(Collectors.toList());
+    }
 }

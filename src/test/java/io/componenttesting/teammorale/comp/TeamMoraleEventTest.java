@@ -36,8 +36,8 @@ public class TeamMoraleEventTest extends AbstractEvent {
     public void testStuff() {
         String body = getBody("test.json");
         sendInEvent(body);
-//        List<JsonPath> output = getOutputJson();
-//
-//        Assertions.assertEquals(output.size(), 1);
+        List<JsonPath> output = getOutputJson();
+
+        Assertions.assertEquals(output.size(), 1);
     }
 }
