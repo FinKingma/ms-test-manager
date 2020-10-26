@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class TeamsEntity {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator="teams_seq")
+    @SequenceGenerator(sequenceName = "teams_seq", allocationSize = 1, name = "teams_seq")
     private Long id;
 
     @Column(nullable = false)

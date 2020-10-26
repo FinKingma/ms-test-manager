@@ -28,7 +28,7 @@ public class EventReceiver {
         try {
             teamMoraleService.handleNewHappening(content);
         } catch (Exception e) {
-            return;
+            LOGGER.error("something happened: {}",e);
         }
     }
 

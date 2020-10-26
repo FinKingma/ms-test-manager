@@ -5,5 +5,6 @@ CREATE TABLE teams
 (
     id bigint NOT NULL,
     name VARCHAR(256) NOT NULL,
-    vision VARCHAR(256) NOT NULL
+    vision VARCHAR(256) NOT NULL,
+    primary key (id)
 )
