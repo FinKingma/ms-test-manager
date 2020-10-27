@@ -32,8 +32,8 @@ public class TeamMoraleRestTest extends AbstractEvent {
         given().port(port).body(newTeam).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
 
         //good approach for debugging
-        JsonPath response = given().port(port).when().get("/api/v1/").getBody().jsonPath();
-        Assertions.assertEquals("Fin", response.getString("name[0]"));
+        JsonPath response = given().port(port).when().get("/api/v1/Fin").getBody().jsonPath();
+        Assertions.assertEquals("Fin", response.getString("name"));
     }
 
     @DisplayName("I should be able to update an existing team")
@@ -47,7 +47,7 @@ public class TeamMoraleRestTest extends AbstractEvent {
         given().port(port).body(objectMapper.writeValueAsString(team)).contentType(ContentType.JSON).when().put("/api/v1/").then().statusCode(is(200));
 
         //cleaner approach
-        given().port(port).when().get("/api/v1/").then().assertThat().statusCode(200).body("vision[0]", equalTo("Something great"));
+        given().port(port).when().get("/api/v1/Fin101").then().assertThat().statusCode(200).body("vision", equalTo("Something great"));
     }
 
     @DisplayName("I should be able to delete an existing team")
