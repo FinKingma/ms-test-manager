@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -28,6 +29,9 @@ public class TeamMoraleService {
 
     @Autowired
     private EventPublisher eventPublisher;
+
+    @Autowired
+    private TeamMoraleCalculator teamMoraleCalculator;
 
     private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
@@ -45,8 +49,12 @@ public class TeamMoraleService {
 
     private void updateTeamBasedOnEvent(TeamsEntity entity, TeamEvent event) {
         LOGGER.info("updating team {}", event.getTeamName());
-        entity.setName(event.getTeamName());
-        entity.setVision(event.getHappening());
+        BigDecimal newHappiness = teamMoraleCalculator.getUpdatedHappiness(entity, event);
+        BigDecimal newMorale = teamMoraleCalculator.getUpdatedMorale(entity, event);
+        entity.setHappiness(newHappiness);
+        entity.setMorale(newMorale);
+        entity.setLastUpdatedOn(LocalDateTime.now());
+        entity.setNumberOfUpdates(entity.getNumberOfUpdates()+1);
         teamsDao.save(entity);
     }
 
