@@ -2,6 +2,11 @@
 
 ##Component testing training
 
+####COMPONENT TESTING
+- Wat is component testing
+- Waarom component testing (functionele / blackbox tests in build)
+- restbased / event based
+- Agenda
 ####DE APP
 - Leg de microservice uit
 - Door de code heen lopen
