@@ -10,6 +10,7 @@ import io.restassured.path.json.JsonPath;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -33,6 +34,19 @@ public class TeamMoraleEventTest extends AbstractEvent {
 
     @Autowired
     private TeamsDao teamsDao;
+
+    @DisplayName("Event is ignored if the team does not exist")
+    @Test
+    public void testIgnoreIfTeamDoesntExist() throws JsonProcessingException {
+        TeamEvent event = new TeamEvent();
+        event.setTeamName("Fin011");
+        event.setFun(new BigDecimal(3));
+        event.setLearned(new BigDecimal(3));
+
+        sendInEvent("Fin011", objectMapper.writeValueAsString(event));
+        List<JsonPath> output = getOutputJson();
+        Assertions.assertEquals(output.size(), 0);
+    }
 
     @DisplayName("My teams happiness and morale will grow by organizing fun and interesting events")
     @ParameterizedTest(name = "{0}: base 3.0. event with fun({1}), learned({2}) will result in h({3}),m({4}) - {5}")
