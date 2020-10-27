@@ -75,6 +75,15 @@ public abstract class AbstractEvent {
         given().port(port).body(teamAsString).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
     }
 
+    protected Team newDefaultTeam(String teamName) {
+        Team team = new Team();
+        team.setVision("blaat");
+        team.setTeamName(teamName);
+        team.setHappiness(new BigDecimal(3));
+        team.setMorale(new BigDecimal(3));
+        return team;
+    }
+
     protected void sendInEvent(String teamName, String content) {
         routingSink.sourceOfTeamMorale().send(MessageBuilder.
                 withPayload(content).

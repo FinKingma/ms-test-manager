@@ -40,11 +40,7 @@ public class TeamMoraleRestTest extends AbstractEvent {
     @DisplayName("I should be able to update an existing team")
     @Test
     public void updateTeam() throws JsonProcessingException {
-        Team team = new Team();
-        team.setVision("blaat");
-        team.setTeamName("Fin101");
-        team.setHappiness(new BigDecimal(3));
-        team.setMorale(new BigDecimal(3));
+        Team team = newDefaultTeam("Fin101");
 
         given().port(port).body(objectMapper.writeValueAsString(team)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
 
@@ -57,8 +53,14 @@ public class TeamMoraleRestTest extends AbstractEvent {
 
     @DisplayName("I should be able to delete an existing team")
     @Test
-    public void deleteTeam() {
+    public void deleteTeam() throws JsonProcessingException {
+        Team team = newDefaultTeam("Fin201");
 
+        given().port(port).body(objectMapper.writeValueAsString(team)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
+
+        given().port(port).when().delete("/api/v1/Fin201").then().statusCode(is(200));
+
+        given().port(port).when().get("/api/v1/").then().assertThat().statusCode(200).body("name", not(hasItem(("Fin201"))));
     }
 
     @DisplayName("A team should always have a unique name")
