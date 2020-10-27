@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.teammorale.dao.TeamsDao;
+import io.componenttesting.teammorale.endpoint.TeamMoraleEndpoint;
 import io.componenttesting.teammorale.event.EventPublisher;
 import io.componenttesting.teammorale.event.EventReceiver;
 import io.componenttesting.teammorale.model.TeamsEntity;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Service
 public class TeamMoraleService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(TeamMoraleService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamMoraleService.class);
 
     @Autowired
     private TeamsDao teamsDao;
@@ -32,7 +33,7 @@ public class TeamMoraleService {
 
     public void handleNewHappening(String teamName, String content) throws JsonProcessingException {
         TeamEvent event = objectMapper.readValue(content, TeamEvent.class);
-        Optional<TeamsEntity> entity = teamsDao.findByName(teamName);
+        Optional<TeamsEntity> entity = teamsDao.findByNameIgnoreCase(teamName);
 
         if (entity.isPresent()) {
             updateTeamBasedOnEvent(entity.get(), event);
@@ -50,22 +51,28 @@ public class TeamMoraleService {
     }
 
     public void createNewTeam(Team team) {
-        TeamsEntity newEntity = new TeamsEntity();
-        newEntity.setName(team.getTeamName());
-        newEntity.setVision(team.getVision());
-        newEntity.setHappiness(team.getHappiness());
-        newEntity.setMorale(team.getMorale());
-        newEntity.setNumberOfUpdates(1);
-        newEntity.setCreatedOn(LocalDateTime.now());
-        newEntity.setLastUpdatedOn(LocalDateTime.now());
+        if (team.getMorale() == null || team.getHappiness() == null) {
+            throw new Error("object is missing morale / happiness: " + team);
+        } else if (teamsDao.findByNameIgnoreCase(team.getTeamName()).isPresent()) {
+            throw new Error("Team already exists, please use a unique team name");
+        } else {
+            TeamsEntity newEntity = new TeamsEntity();
+            newEntity.setName(team.getTeamName());
+            newEntity.setVision(team.getVision());
+            newEntity.setHappiness(team.getHappiness());
+            newEntity.setMorale(team.getMorale());
+            newEntity.setNumberOfUpdates(1);
+            newEntity.setCreatedOn(LocalDateTime.now());
+            newEntity.setLastUpdatedOn(LocalDateTime.now());
 
-        teamsDao.save(newEntity);
+            teamsDao.save(newEntity);
 
-        LOGGER.info("new team {} added", team.getTeamName());
+            LOGGER.info("new team {} added", team.getTeamName());
+        }
     }
 
     public void updateTeam(Team team) {
-        Optional<TeamsEntity> entity = teamsDao.findByName(team.getTeamName());
+        Optional<TeamsEntity> entity = teamsDao.findByNameIgnoreCase(team.getTeamName());
         if (entity.isPresent()) {
             TeamsEntity updatedEntity = entity.get();
 
@@ -74,6 +81,7 @@ public class TeamMoraleService {
             updatedEntity.setMorale(team.getMorale());
             updatedEntity.setNumberOfUpdates(updatedEntity.getNumberOfUpdates()+1);
             updatedEntity.setLastUpdatedOn(LocalDateTime.now());
+            teamsDao.save(updatedEntity);
         } else {
             throw new IllegalArgumentException("Team does not exist");
         }

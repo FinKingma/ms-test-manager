@@ -13,9 +13,7 @@ public class Team {
     @NotNull
     private String vision;
 
-    @NotNull
     private BigDecimal happiness;
 
-    @NotNull
     private BigDecimal morale;
 }

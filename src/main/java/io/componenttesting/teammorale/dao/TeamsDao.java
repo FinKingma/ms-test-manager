@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface TeamsDao extends JpaRepository<TeamsEntity, Long> {
 
-    Optional<TeamsEntity> findByName(String name);
+    Optional<TeamsEntity> findByNameIgnoreCase(String name);
 }

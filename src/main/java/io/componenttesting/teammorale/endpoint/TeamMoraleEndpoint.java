@@ -5,7 +5,10 @@ import io.componenttesting.teammorale.model.TeamsEntity;
 import io.componenttesting.teammorale.service.TeamMoraleService;
 import io.componenttesting.teammorale.vo.Team;
 import io.componenttesting.teammorale.vo.TeamEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @RequestMapping("api/v1/")
 public class TeamMoraleEndpoint {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamMoraleEndpoint.class);
+
     @Autowired
     TeamsDao teamsDao;
 
@@ -24,7 +29,7 @@ public class TeamMoraleEndpoint {
 
     @GetMapping("/{name}")
     public TeamsEntity getByName(@PathVariable String name) {
-        Optional<TeamsEntity> result = teamsDao.findByName(name);
+        Optional<TeamsEntity> result = teamsDao.findByNameIgnoreCase(name);
         if (result.isPresent()) {
             return result.get();
         } else {
@@ -40,11 +45,28 @@ public class TeamMoraleEndpoint {
 
     @PostMapping()
     public void createNewTeam(@RequestBody @Valid Team team) {
-        teamMoraleService.createNewTeam(team);
+        try {
+            teamMoraleService.createNewTeam(team);
+        } catch (Error e) {
+            throw new InvalidArgumentException();
+        }
     }
 
     @PutMapping()
     public void updateTeam(@RequestBody @Valid Team team) {
         teamMoraleService.updateTeam(team);
+    }
+
+    @DeleteMapping("/{name}")
+    public void deleteTeam(@PathVariable String name) {
+        Optional<TeamsEntity> result = teamsDao.findByNameIgnoreCase(name);
+        if (result.isPresent()) {
+            teamsDao.delete(result.get());
+            LOGGER.info("team {} was deleted", name);
+        }
+    }
+
+    @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
+    public class InvalidArgumentException extends RuntimeException {
     }
 }

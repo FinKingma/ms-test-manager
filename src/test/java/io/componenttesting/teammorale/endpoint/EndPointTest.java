@@ -30,7 +30,7 @@ public class EndPointTest {
     public void testGetTeamData() {
         TeamsEntity t = new TeamsEntity();
         t.setName("Fin");
-        when(dao.findByName("Fin")).thenReturn(Optional.of(t));
+        when(dao.findByNameIgnoreCase("Fin")).thenReturn(Optional.of(t));
 
         TeamsEntity team = teamMoraleEndpoint.getByName("Fin");
         assertEquals("Fin", team.getName());

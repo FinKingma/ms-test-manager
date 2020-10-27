@@ -33,14 +33,10 @@ public class TeamMoraleEventTest extends AbstractEvent {
     @Autowired
     private TeamsDao teamsDao;
 
-    @LocalServerPort
-    private int port;
-
     @DisplayName("Just some test")
     @Test
     public void testStuff() {
-        String newTeam = getBody("newTeam.json");
-        given().port(port).body(newTeam).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
+        createNewTeam("Fin");
 
         String body = getBody("test.json");
         sendInEvent("Fin", body);
