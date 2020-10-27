@@ -54,7 +54,11 @@ public class TeamMoraleEndpoint {
 
     @PutMapping()
     public void updateTeam(@RequestBody @Valid Team team) {
-        teamMoraleService.updateTeam(team);
+        try {
+            teamMoraleService.updateTeam(team);
+        } catch (Error e) {
+            throw new InvalidArgumentException();
+        }
     }
 
     @DeleteMapping("/{name}")

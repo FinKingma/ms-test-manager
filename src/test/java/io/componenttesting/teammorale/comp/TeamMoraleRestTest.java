@@ -2,7 +2,6 @@ package io.componenttesting.teammorale.comp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.componenttesting.teammorale.vo.Team;
-import io.componenttesting.teammorale.vo.TeamEvent;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -66,9 +65,9 @@ public class TeamMoraleRestTest extends AbstractEvent {
     @DisplayName("A team should always have a unique name")
     @ParameterizedTest(name = "{index}: name {0} should give status code {1}")
     @CsvSource({
-            "Fin123, Fin123, 422",
-            "FIN124, fin124, 422",
-            "Fin125, Fin126, 200"
+            "Fin301, Fin301, 422",
+            "FIN302, fin302, 422",
+            "Fin303, Fin313, 200"
     })
     public void createTeamWithDuplicateName(final String existingTeamName, final String newTeamName, final int expectedStatusCode) throws JsonProcessingException {
         createNewTeam(existingTeamName);
@@ -80,5 +79,13 @@ public class TeamMoraleRestTest extends AbstractEvent {
         team.setHappiness(new BigDecimal(3));
 
         given().port(port).body(objectMapper.writeValueAsString(team)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(expectedStatusCode));
+    }
+
+    @DisplayName("You can only update existing teams")
+    @Test
+    public void updateNonExistingTeam() throws JsonProcessingException {
+        Team team = newDefaultTeam("Fin401");
+
+        given().port(port).body(objectMapper.writeValueAsString(team)).contentType(ContentType.JSON).when().put("/api/v1/").then().statusCode(is(422));
     }
 }

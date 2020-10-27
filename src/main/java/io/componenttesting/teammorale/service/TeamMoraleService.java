@@ -77,13 +77,10 @@ public class TeamMoraleService {
             TeamsEntity updatedEntity = entity.get();
 
             updatedEntity.setVision(team.getVision());
-            updatedEntity.setHappiness(team.getHappiness());
-            updatedEntity.setMorale(team.getMorale());
-            updatedEntity.setNumberOfUpdates(updatedEntity.getNumberOfUpdates()+1);
             updatedEntity.setLastUpdatedOn(LocalDateTime.now());
             teamsDao.save(updatedEntity);
         } else {
-            throw new IllegalArgumentException("Team does not exist");
+            throw new Error("Team does not exist");
         }
     }
 }
