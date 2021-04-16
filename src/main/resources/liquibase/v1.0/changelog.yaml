@@ -1,8 +1,10 @@
----
 databaseChangeLog:
   - include:
-      file: install.sql
+      file: install-project.sql
       relativeToChangelogFile: true
   - include:
-      file: sequence.sql
+      file: install-testdata.sql
+      relativeToChangelogFile: true
+  - include:
+      file: install-sequences.sql
       relativeToChangelogFile: true

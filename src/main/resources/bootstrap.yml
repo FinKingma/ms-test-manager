@@ -1,7 +1,7 @@
 ---
 spring:
   application:
-    name: ms-team-morale
+    name: ms-team-manager
   cloud:
     config:
       enabled: true

@@ -1,4 +1,4 @@
-# ms-team-morale
+# ms-project-morale
 
 ##Component testing training
 
@@ -28,7 +28,7 @@
 ####EVENT TESTING
 - spring cloud stream testsupport
 - Autowiring the collector, source and sink
-- eerste test, insturen van een event zonder dat het team bestaat
+- eerste test, insturen van een event zonder dat het project bestaat
 - Opzetten testdata (via rest, of direct in de db?)
 - Grotere test, combineer testdata met event insturen
 - 6 maanden regel test, gebruik parameterized test. Mocking time? Of direct in de db schrijven?
