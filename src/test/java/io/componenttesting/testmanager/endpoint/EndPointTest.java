@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 public class EndPointTest {
 
     @InjectMocks
-    private TeamMoraleEndpoint teamMoraleEndpoint;
+    private TestManagerEndpoint teamMoraleEndpoint;
 
     @Mock
     private ProjectDao projectDao;

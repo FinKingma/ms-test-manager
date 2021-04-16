@@ -24,36 +24,26 @@ public class TestManagerRestTest extends AbstractEvent {
 
     @DisplayName("I should be able to create a new team")
     @Test
-    public void createTeam() {
-        String newTeam = getBody("newTeam.json");
+    public void createTeam() throws JsonProcessingException {
+        Project project = new Project();
+        project.setName("Fin");
 
-        given().port(port).body(newTeam).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
+        String body = objectMapper.writeValueAsString(project);
+        given().port(port).body(body).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
 
         //good approach for debugging
         JsonPath response = given().port(port).when().get("/api/v1/Fin").getBody().jsonPath();
         Assertions.assertEquals("Fin", response.getString("name"));
     }
-//
-//    @DisplayName("I should be able to update an existing team")
-//    @Test
-//    public void updateTeam() throws JsonProcessingException {
-//        Project project = newDefaultTeam("Fin101");
-//
-//        given().port(port).body(objectMapper.writeValueAsString(project)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
-//
-//        project.setVision("Something great");
-//        given().port(port).body(objectMapper.writeValueAsString(project)).contentType(ContentType.JSON).when().put("/api/v1/").then().statusCode(is(200));
-//
-//        //cleaner approach
-//        given().port(port).when().get("/api/v1/Fin101").then().assertThat().statusCode(200).body("vision", equalTo("Something great"));
-//    }
 
     @DisplayName("I should be able to delete an existing team")
     @Test
     public void deleteTeam() throws JsonProcessingException {
-        Project project = newDefaultTeam("Fin201");
+        Project project = new Project();
+        project.setName("Fin201");
+        String body = objectMapper.writeValueAsString(project);
 
-        given().port(port).body(objectMapper.writeValueAsString(project)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
+        given().port(port).body(body).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(200));
 
         given().port(port).when().delete("/api/v1/Fin201").then().statusCode(is(200));
 
@@ -75,12 +65,4 @@ public class TestManagerRestTest extends AbstractEvent {
 
         given().port(port).body(objectMapper.writeValueAsString(project)).contentType(ContentType.JSON).when().post("/api/v1/").then().statusCode(is(expectedStatusCode));
     }
-//
-//    @DisplayName("You can only update existing teams")
-//    @Test
-//    public void updateNonExistingTeam() throws JsonProcessingException {
-//        Project project = newDefaultTeam("Fin401");
-//
-//        given().port(port).body(objectMapper.writeValueAsString(project)).contentType(ContentType.JSON).when().put("/api/v1/").then().statusCode(is(422));
-//    }
 }

@@ -1,28 +1,30 @@
 package io.componenttesting.testmanager.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@Data
-@Entity(name = "project")
+@Entity(name = "Project")
 @Table(name = "project")
 public class ProjectEntity {
 
+    @Getter @Setter
     @Id
     @GeneratedValue( strategy = GenerationType.SEQUENCE, generator="project_seq")
     @SequenceGenerator(sequenceName = "project_seq", allocationSize = 1, name = "project_seq")
     private Long id;
 
+    @Getter @Setter
     @Column(nullable = false)
     private String name;
-//
-//    @OneToMany(
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
-//    @JoinColumn(name = "project_id")
-//    private List<TestDataEntity> testdata = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<TestDataEntity> testdata;
 }

@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity(name = "Testdata")
+@Table(name = "testdata")
 public class TestDataEntity {
 
     @Id
@@ -13,11 +14,14 @@ public class TestDataEntity {
     @SequenceGenerator(sequenceName = "testdata_seq", allocationSize = 1, name = "testdata_seq")
     private Long id;
 
-    @Column(nullable = false)
-    private Long testRunId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProjectEntity project;
 
     @Column(nullable = false)
-    private String testName;
+    private Long testrunId;
+
+    @Column(nullable = false)
+    private String testname;
 
     @Column(nullable = false)
     private String result;

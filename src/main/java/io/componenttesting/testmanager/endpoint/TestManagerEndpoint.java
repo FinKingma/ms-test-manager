@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/")
-public class TeamMoraleEndpoint {
+public class TestManagerEndpoint {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeamMoraleEndpoint.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestManagerEndpoint.class);
 
     @Autowired
     ProjectDao projectDao;
