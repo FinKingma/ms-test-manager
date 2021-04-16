@@ -58,7 +58,7 @@ public class TestManagerRestTest extends AbstractEvent {
             "Fin303, Fin313, 200"
     })
     public void createTeamWithDuplicateName(final String existingTeamName, final String newTeamName, final int expectedStatusCode) throws JsonProcessingException {
-        createNewTeam(existingTeamName);
+        createNewProject(existingTeamName);
 
         Project project = new Project();
         project.setName(newTeamName);

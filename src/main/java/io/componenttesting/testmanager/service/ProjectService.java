@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.event.EventPublisher;
 import io.componenttesting.testmanager.model.ProjectEntity;
+import io.componenttesting.testmanager.model.TestDataEntity;
 import io.componenttesting.testmanager.vo.Project;
 import io.componenttesting.testmanager.vo.TestDataEvent;
 import org.slf4j.Logger;
@@ -41,8 +42,14 @@ public class ProjectService {
     }
 
     private void updateTeamBasedOnEvent(ProjectEntity entity, TestDataEvent event) {
-        LOGGER.info("updating project {}", event.getTeamName());
+        LOGGER.info("updating project {}", event.getProject());
+        TestDataEntity testdata = new TestDataEntity();
+        testdata.setTestname(event.getTestName());
+        testdata.setTestrunId(event.getTestRunId());
+        testdata.setResult(event.getResult());
 
+        entity.getTestdata().add(testdata);
+        entity.getTestdata().forEach(td -> td.setProject(entity));
         projectDao.save(entity);
     }
 

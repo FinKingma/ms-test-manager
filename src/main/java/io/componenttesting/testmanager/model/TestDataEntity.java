@@ -3,6 +3,7 @@ package io.componenttesting.testmanager.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Data
 @Entity(name = "Testdata")
@@ -18,11 +19,24 @@ public class TestDataEntity {
     private ProjectEntity project;
 
     @Column(nullable = false)
-    private Long testrunId;
+    private Integer testrunId;
 
     @Column(nullable = false)
     private String testname;
 
     @Column(nullable = false)
     private String result;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestDataEntity that = (TestDataEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(testrunId, that.testrunId) && Objects.equals(testname, that.testname) && Objects.equals(result, that.result);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, testrunId, testname, result);
+    }
 }

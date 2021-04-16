@@ -53,7 +53,7 @@ public abstract class AbstractEvent {
         collector.forChannel(routingSource.output()).clear();
     }
 
-    protected void createNewTeam(String teamName) {
+    protected void createNewProject(String teamName) {
         Project project = new Project();
         project.setName(teamName);
 
