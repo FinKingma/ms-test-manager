@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>io.componenttesting</groupId>
-    <artifactId>teammorale</artifactId>
+    <artifactId>testmanager</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
