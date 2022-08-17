@@ -30,10 +30,10 @@ public class TestManagerEndpoint {
     ProjectService projectService;
 
     @ExceptionHandler({ NotFoundException.class })
-    public ResponseEntity<String> handleException() {
+    public ResponseEntity<String> handleException(NotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body("niet gelukt");
+                .body(exception.getMessage());
     }
 
     @GetMapping("/{name}")
