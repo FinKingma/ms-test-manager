@@ -5,16 +5,21 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.event.EventPublisher;
-import io.componenttesting.testmanager.model.ProjectEntity;
-import io.componenttesting.testmanager.model.TestDataEntity;
+import io.componenttesting.testmanager.dao.ProjectEntity;
+import io.componenttesting.testmanager.model.ProjectResponse;
+import io.componenttesting.testmanager.model.TestData;
+import io.componenttesting.testmanager.dao.TestDataEntity;
 import io.componenttesting.testmanager.vo.Project;
 import io.componenttesting.testmanager.vo.TestDataEvent;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -28,6 +33,33 @@ public class ProjectService {
     private EventPublisher eventPublisher;
 
     private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+    public ProjectResponse getProject(String projectName) throws NotFoundException {
+        Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(projectName);
+        if (result.isPresent()) {
+            return map(result.get());
+        } else {
+            throw new NotFoundException("project " + projectName + " was not found.");
+        }
+    }
+
+    public List<ProjectResponse> getAllProjects() {
+        List<ProjectEntity> result = projectDao.findAll();
+        return result.stream().map(this::map).collect(Collectors.toList());
+    }
+
+    private ProjectResponse map(ProjectEntity entity) {
+        ProjectResponse project = new ProjectResponse();
+        project.setName(entity.getName());
+        project.setTestdata(entity.getTestdata().stream().map((td) -> {
+            TestData testData = new TestData();
+            testData.setResult(td.getResult());
+            testData.setTestrunId(td.getTestrunId());
+            testData.setTestname(td.getTestname());
+            return testData;
+        }).collect(Collectors.toList()));
+        return project;
+    }
 
     public void handleNewHappening(String projectName, String content) throws JsonProcessingException {
         TestDataEvent event = objectMapper.readValue(content, TestDataEvent.class);
@@ -47,9 +79,9 @@ public class ProjectService {
         testdata.setTestname(event.getTestName());
         testdata.setTestrunId(event.getTestRunId());
         testdata.setResult(event.getResult());
+        testdata.setProject(entity);
 
         entity.getTestdata().add(testdata);
-        entity.getTestdata().forEach(td -> td.setProject(entity));
         projectDao.save(entity);
     }
 

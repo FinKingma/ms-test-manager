@@ -1,16 +1,18 @@
 package io.componenttesting.testmanager.endpoint;
 
 import io.componenttesting.testmanager.dao.ProjectDao;
-import io.componenttesting.testmanager.model.ProjectEntity;
+import io.componenttesting.testmanager.dao.ProjectEntity;
+import io.componenttesting.testmanager.model.ProjectResponse;
 import io.componenttesting.testmanager.service.ProjectService;
 import io.componenttesting.testmanager.vo.Project;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +29,21 @@ public class TestManagerEndpoint {
     @Autowired
     ProjectService projectService;
 
+    @ExceptionHandler({ NotFoundException.class })
+    public ResponseEntity<String> handleException() {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("niet gelukt");
+    }
+
     @GetMapping("/{name}")
-    public ProjectEntity getByName(@PathVariable String name) {
-        Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(name);
-        if (result.isPresent()) {
-            return result.get();
-        } else {
-            throw new Error("did not find project " + name);
-        }
+    public ResponseEntity<ProjectResponse> getByName(@PathVariable String name) throws NotFoundException {
+        return ResponseEntity.ok().body(projectService.getProject(name));
     }
 
     @GetMapping()
-    public List<ProjectEntity> getAll() {
-        return projectDao.findAll();
+    public ResponseEntity<List<ProjectResponse>> getAll() {
+        return ResponseEntity.ok().body(projectService.getAllProjects());
     }
 
     @PostMapping()
