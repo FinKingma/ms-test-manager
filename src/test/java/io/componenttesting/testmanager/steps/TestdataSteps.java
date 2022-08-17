@@ -5,9 +5,6 @@ import io.componenttesting.testmanager.dao.ProjectEntity;
 import io.cucumber.java.en.Given;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static io.restassured.RestAssured.given;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-
 public class TestdataSteps {
 
     @Autowired

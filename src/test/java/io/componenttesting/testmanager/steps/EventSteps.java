@@ -1,7 +1,5 @@
 package io.componenttesting.testmanager.steps;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.testmanager.event.TestManagerSink;
 import io.componenttesting.testmanager.event.TestManagerSource;
 import io.cucumber.java.Before;
