@@ -117,6 +117,7 @@
     <orderEntry type="library" name="Maven: io.cucumber:cucumber-junit:7.6.0" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.13" level="project" />
     <orderEntry type="library" name="Maven: io.cucumber:cucumber-spring:7.6.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.tomakehurst:wiremock-standalone:2.27.2" level="project" />
     <orderEntry type="library" name="Maven: net.javacrumbs.json-unit:json-unit-assertj:2.35.0" level="project" />
     <orderEntry type="library" name="Maven: net.javacrumbs.json-unit:json-unit-core:2.35.0" level="project" />
     <orderEntry type="library" name="Maven: net.javacrumbs.json-unit:json-unit-json-path:2.35.0" level="project" />

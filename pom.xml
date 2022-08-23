@@ -57,6 +57,14 @@
             <version>7.6.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>2.27.2</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/net.javacrumbs.json-unit/json-unit-assertj -->
         <dependency>
             <groupId>net.javacrumbs.json-unit</groupId>

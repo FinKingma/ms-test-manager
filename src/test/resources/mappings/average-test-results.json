@@ -1,0 +1,18 @@
+{
+  "request": {
+    "url": "/average-passing-tests",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "averagePassingPercentage": 70
+    },
+    "headers": {
+      "Expires": "0",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Content-Type": "application/json"
+    }
+  }
+}

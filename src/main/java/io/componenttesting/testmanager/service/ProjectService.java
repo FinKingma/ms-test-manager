@@ -3,10 +3,13 @@ package io.componenttesting.testmanager.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.componenttesting.testmanager.dao.MetricsRepository;
 import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.event.EventPublisher;
 import io.componenttesting.testmanager.dao.ProjectEntity;
+import io.componenttesting.testmanager.model.AverageTestResults;
 import io.componenttesting.testmanager.model.ProjectResponse;
+import io.componenttesting.testmanager.model.Rating;
 import io.componenttesting.testmanager.model.TestData;
 import io.componenttesting.testmanager.dao.TestDataEntity;
 import io.componenttesting.testmanager.vo.Project;
@@ -15,6 +18,7 @@ import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +36,20 @@ public class ProjectService {
     @Autowired
     private EventPublisher eventPublisher;
 
+    @Autowired
+    private MetricsRepository metricsRepository;
+
+    @Value("${metrics.tolerance}")
+    private int metricTolerance;
+
     private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public ProjectResponse getProject(String projectName) throws NotFoundException {
         Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(projectName);
         if (result.isPresent()) {
-            return map(result.get());
+            AverageTestResults averageTestResults = metricsRepository.getAverageTestPassing();
+            ProjectResponse project = map(result.get());
+            return calculateProjectRating(project, averageTestResults);
         } else {
             throw new NotFoundException("project " + projectName + " was not found.");
         }
@@ -45,7 +57,25 @@ public class ProjectService {
 
     public List<ProjectResponse> getAllProjects() {
         List<ProjectEntity> result = projectDao.findAll();
-        return result.stream().map(this::map).collect(Collectors.toList());
+        AverageTestResults averageTestResults = metricsRepository.getAverageTestPassing();
+        return result.stream().map(project -> calculateProjectRating(map(project), averageTestResults)).collect(Collectors.toList());
+    }
+
+
+
+    private ProjectResponse calculateProjectRating(ProjectResponse projectResponse, AverageTestResults averageTestResults) {
+        if (projectResponse.getTestdata().isEmpty()) {
+            return projectResponse;
+        }
+        long passedTests = projectResponse.getTestdata().stream().filter(testData -> "PASSED".equalsIgnoreCase(testData.getResult())).count();
+        int passedPercentage = Long.valueOf((passedTests * 100) / projectResponse.getTestdata().size()).intValue();
+        Rating rating =
+                passedPercentage >= averageTestResults.getAveragePassingPercentage() ? Rating.GOOD :
+                passedPercentage + metricTolerance >= averageTestResults.getAveragePassingPercentage() ? Rating.AVERAGE :
+                Rating.POOR;
+        projectResponse.setRating(rating);
+
+        return projectResponse;
     }
 
     private ProjectResponse map(ProjectEntity entity) {

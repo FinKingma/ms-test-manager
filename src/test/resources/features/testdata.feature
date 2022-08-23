@@ -15,6 +15,7 @@ Feature: Test data
     """
     {
       "name": "TestProject1",
+      "rating": "${json-unit.ignore}",
       "testdata": [{"result":"PASSED","testname":"test01","testrunId":12}]
     }
     """
