@@ -1,10 +1,10 @@
-package io.componenttesting.testmanager.endpoint;
+package io.componenttesting.testmanager.controller;
 
 import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.dao.ProjectEntity;
 import io.componenttesting.testmanager.model.ProjectResponse;
 import io.componenttesting.testmanager.service.ProjectService;
-import io.componenttesting.testmanager.vo.Project;
+import io.componenttesting.testmanager.model.Project;
 import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

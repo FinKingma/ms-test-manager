@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.componenttesting.testmanager.event.TestManagerSink;
 import io.componenttesting.testmanager.event.TestManagerSource;
-import io.componenttesting.testmanager.vo.TestDataEvent;
+import io.componenttesting.testmanager.model.TestDataEvent;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

@@ -1,4 +1,4 @@
-package io.componenttesting.testmanager.vo;
+package io.componenttesting.testmanager.model;
 
 import lombok.Data;
 
