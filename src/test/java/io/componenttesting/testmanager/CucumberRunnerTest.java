@@ -11,7 +11,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources")
-public class CucumberIT {
+public class CucumberRunnerTest {
 
     @ClassRule
     public static WireMockRule wireMockRule = new WireMockRule(options().port(8080).notifier(new ConsoleNotifier(true)));

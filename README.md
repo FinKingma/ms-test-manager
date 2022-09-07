@@ -24,3 +24,12 @@ Daarnaast wordt geluistert naar test resultaat events, die toegevoegd worden aan
 - Testen die tegen de API aan testen blijven overeind terwijl de code gerefactored kan worden
 - Makkelijk om issues te debuggen door breakingpoints te zetten terwijl je een component test draait
 - Met goeie opzet (bijv cucumber) kan je snel een eerste test schrijven die je helpt in development
+
+
+## Draaien van het project
+
+### Opstarten van het project
+`mvn spring-boot:run`
+
+### Draaien van alle testen
+`mvn test`
