@@ -71,6 +71,30 @@ paths:
       responses:
         200:
           description: OK
+  /events:
+    get:
+      operationId: events
+      tags:
+        - events
+      responses:
+        200:
+          description: the events that this service is listening to
+          content:
+            text/event-stream:
+              schema:
+                format: event-stream
+                type: object
+                properties:
+                  id:
+                    type: string
+                  eventType:
+                    $ref: '#/components/schemas/EventHeader'
+                  projectName:
+                    description: the project that the testdata is supposed for
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/TestDataEvent'
+
 components:
   schemas:
     ProjectResponse:
@@ -101,3 +125,17 @@ components:
       properties:
         name:
           type: string
+    TestDataEvent:
+      type: object
+      properties:
+        project:
+          type: string
+        testRunId:
+          type: integer
+        testName:
+          type: string
+        result:
+          type: string
+    EventHeader:
+      type: string
+      enum: [TEST_EVENT]

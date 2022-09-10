@@ -2,9 +2,9 @@ package io.componenttesting.testmanager.steps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.componenttesting.model.TestDataEvent;
 import io.componenttesting.testmanager.event.TestManagerSink;
 import io.componenttesting.testmanager.event.TestManagerSource;
-import io.componenttesting.testmanager.event.TestDataEvent;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -75,11 +75,11 @@ public class EventSteps {
         assertThat(payloads.size()).isEqualTo(0);
     }
 
-    private void sendInEvent(String teamName, String content) {
+    private void sendInEvent(String projectName, String content) {
         routingSink.sourceOfTeamMorale().send(MessageBuilder.
                 withPayload(content).
-                setHeader("eventType", "TEAM_EVENT").
-                setHeader("teamName", teamName).
+                setHeader("eventType", "TEST_EVENT").
+                setHeader("projectName", projectName).
                 build());
     }
 
