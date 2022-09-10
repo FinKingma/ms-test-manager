@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
@@ -15,10 +14,5 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 public class CucumberRunnerTest {
 
     @ClassRule
-    public static WireMockRule wireMockRule = new WireMockRule(options().port(8080).notifier(new ConsoleNotifier(true)));
-
-    @BeforeClass
-    public static void beforeClass() {
-        System.setProperty("metrics.endpoint", String.format("http://localhost:%s/", wireMockRule.port()));
-    }
+    public static WireMockRule wireMockRule = new WireMockRule(options().port(8143).notifier(new ConsoleNotifier(true)));
 }
