@@ -3,10 +3,10 @@ metrics:
   tolerance: 10
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost;databaseName=MsTestManager
-    username: sa
-    password: sa
-    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:mysql://localhost:3306/MsTestManager
+    username: root
+    password: r00TUser123#
+    driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
