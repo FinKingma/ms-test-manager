@@ -11,7 +11,7 @@ Feature: Test data
       "result": "PASSED"
     }
     """
-    Then path "/api/v1/TestProject1" should exist and give me:
+    Then path "/api/projects/TestProject1" should exist and give me:
     """
     {
       "name": "TestProject1",
@@ -31,5 +31,5 @@ Feature: Test data
       "result": "PASSED"
     }
     """
-    Then path "/api/v1/TestNonExistent" should receive a 404 status code
+    Then path "/api/projects/TestNonExistent" should receive a 404 status code
     And no messages will be published

@@ -14,6 +14,8 @@ spring:
       ddl-auto: create-drop
   liquibase:
     change-log: classpath:liquibase/changelog.yaml
+  jackson:
+    default-property-inclusion: non_null
 springdoc:
   api-docs:
     path: /open-api

@@ -8,13 +8,14 @@ import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.event.EventPublisher;
 import io.componenttesting.testmanager.dao.ProjectEntity;
 import io.componenttesting.testmanager.model.AverageTestResults;
-import io.componenttesting.testmanager.model.ProjectResponse;
-import io.componenttesting.testmanager.model.Rating;
-import io.componenttesting.testmanager.model.TestData;
 import io.componenttesting.testmanager.dao.TestDataEntity;
-import io.componenttesting.testmanager.model.Project;
 import io.componenttesting.testmanager.event.TestDataEvent;
+import io.componenttesting.model.ProjectCreate;
+import io.componenttesting.model.ProjectResponse;
+import io.componenttesting.model.Rating;
+import io.componenttesting.model.TestData;
 import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,8 @@ public class ProjectService {
 
     private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    public ProjectResponse getProject(String projectName) throws NotFoundException {
+    @SneakyThrows
+    public ProjectResponse getProject(String projectName) {
         Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(projectName);
         if (result.isPresent()) {
             AverageTestResults averageTestResults = metricsRepository.getAverageTestPassing();
@@ -115,7 +117,7 @@ public class ProjectService {
         projectDao.save(entity);
     }
 
-    public void createNewProject(Project project) {
+    public void createNewProject(ProjectCreate project) {
         if (projectDao.findByNameIgnoreCase(project.getName()).isPresent()) {
             throw new Error("Project already exists, please use a unique team name");
         } else {
@@ -125,17 +127,6 @@ public class ProjectService {
             projectDao.save(newEntity);
 
             LOGGER.info("new project {} added", project.getName());
-        }
-    }
-
-    public void updateProject(Project project) {
-        Optional<ProjectEntity> entity = projectDao.findByNameIgnoreCase(project.getName());
-        if (entity.isPresent()) {
-            ProjectEntity updatedEntity = entity.get();
-            // no values to update yet
-            projectDao.save(updatedEntity);
-        } else {
-            throw new Error("Project does not exist");
         }
     }
 }

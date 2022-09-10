@@ -5,7 +5,7 @@ Feature: Rating
   Scenario Outline: I should get a good rating if my passing percentage exceed the average of all companies <rating>
     Given project "RatingProject<id>" exists
     When project "RatingProject<id>" has received <passing> passing tests and <failing> failing tests
-    Then path "/api/v1/RatingProject<id>" should exist and give me:
+    Then path "/api/projects/RatingProject<id>" should exist and give me:
     """
     {
       "name": "RatingProject<id>",

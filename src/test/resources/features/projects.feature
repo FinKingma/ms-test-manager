@@ -1,28 +1,29 @@
 Feature: Projects
 
   Scenario: I should be able to create a new project
-    When I use "/api/v1/" to send:
+    When I use "/api/projects/" to send:
     """
     {
       "name": "Fin"
     }
     """
-    Then path "/api/v1/Fin" should exist and give me:
+    Then path "/api/projects/Fin" should exist and give me:
     """
     {
       "name": "Fin",
+      "rating": null,
       "testdata": []
     }
     """
 
   Scenario: I should be able to delete an existing project
     Given project "AAA" exists
-    When I delete "/api/v1/AAA"
-    Then path "/api/v1/AAA" should receive a 404 status code
+    When I delete "/api/projects/AAA"
+    Then path "/api/projects/AAA" should receive a 404 status code
 
   Scenario Outline: A team should always have a unique name - <name>
     Given project "<existing>" exists
-    When I use "/api/v1/" to send:
+    When I use "/api/projects/" to send:
     """
     {
       "name": "<name>"

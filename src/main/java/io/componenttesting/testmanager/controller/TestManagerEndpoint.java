@@ -2,9 +2,11 @@ package io.componenttesting.testmanager.controller;
 
 import io.componenttesting.testmanager.dao.ProjectDao;
 import io.componenttesting.testmanager.dao.ProjectEntity;
-import io.componenttesting.testmanager.model.ProjectResponse;
+import io.componenttesting.api.ProjectsApi;
+import io.componenttesting.model.ProjectCreate;
+import io.componenttesting.model.ProjectResponse;
 import io.componenttesting.testmanager.service.ProjectService;
-import io.componenttesting.testmanager.model.Project;
+import io.swagger.annotations.ApiParam;
 import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/projects/")
-public class TestManagerEndpoint {
+public class TestManagerEndpoint implements ProjectsApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestManagerEndpoint.class);
 
@@ -36,41 +37,34 @@ public class TestManagerEndpoint {
                 .body(exception.getMessage());
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<ProjectResponse> getByName(@PathVariable String name) throws NotFoundException {
-        return ResponseEntity.ok().body(projectService.getProject(name));
+    @Override
+    public ResponseEntity<ProjectResponse> getProject(@PathVariable String projectName) {
+        return ResponseEntity.ok().body(projectService.getProject(projectName));
     }
 
-    @GetMapping()
-    public ResponseEntity<List<ProjectResponse>> getAll() {
+    @Override
+    public ResponseEntity<List<ProjectResponse>> getProjects() {
         return ResponseEntity.ok().body(projectService.getAllProjects());
     }
 
-    @PostMapping()
-    public void createNewProject(@RequestBody @Valid Project project) {
+    @Override
+    public ResponseEntity<Void> createProjects(@RequestBody @Valid ProjectCreate project) {
         try {
             projectService.createNewProject(project);
         } catch (Error e) {
             throw new InvalidArgumentException();
         }
+        return null;
     }
 
-    @PutMapping()
-    public void updateProject(@RequestBody @Valid Project project) {
-        try {
-            projectService.updateProject(project);
-        } catch (Error e) {
-            throw new InvalidArgumentException();
-        }
-    }
-
-    @DeleteMapping("/{name}")
-    public void deleteProject(@PathVariable String name) {
-        Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(name);
+    @Override
+    public ResponseEntity<Void> deleteProject(String projectName) {
+        Optional<ProjectEntity> result = projectDao.findByNameIgnoreCase(projectName);
         if (result.isPresent()) {
             projectDao.delete(result.get());
-            LOGGER.info("project {} was deleted", name);
+            LOGGER.info("project {} was deleted", projectName);
         }
+        return null;
     }
 
     @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
