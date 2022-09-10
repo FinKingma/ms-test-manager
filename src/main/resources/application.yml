@@ -1,3 +1,16 @@
 metrics:
   endpoint: http://localhost:8080
   tolerance: 10
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost;databaseName=MsTestManager
+    username: sa
+    password: sa
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+      ddl-auto: create-drop
+  liquibase:
+    change-log: classpath:liquibase/changelog.yaml

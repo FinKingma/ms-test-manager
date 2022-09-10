@@ -13,7 +13,7 @@ import io.componenttesting.testmanager.model.Rating;
 import io.componenttesting.testmanager.model.TestData;
 import io.componenttesting.testmanager.dao.TestDataEntity;
 import io.componenttesting.testmanager.model.Project;
-import io.componenttesting.testmanager.model.TestDataEvent;
+import io.componenttesting.testmanager.event.TestDataEvent;
 import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -28,6 +28,9 @@ Daarnaast wordt geluistert naar test resultaat events, die toegevoegd worden aan
 
 ## Draaien van het project
 
+### Lokaal opstarten van kafka
+Download and run kafka from https://kafka.apache.org/quickstart
+
 ### Opstarten van het project
 `mvn spring-boot:run`
 
