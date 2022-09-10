@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping("api/projects/")
 public class TestManagerEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestManagerEndpoint.class);

@@ -1,5 +1,5 @@
 metrics:
-  endpoint: http://localhost:8080
+  endpoint: http://localhost:9000
   tolerance: 10
 spring:
   datasource:
@@ -14,3 +14,8 @@ spring:
       ddl-auto: create-drop
   liquibase:
     change-log: classpath:liquibase/changelog.yaml
+springdoc:
+  api-docs:
+    path: /open-api
+  swagger-ui:
+    path: /

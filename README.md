@@ -28,10 +28,17 @@ Daarnaast wordt geluistert naar test resultaat events, die toegevoegd worden aan
 
 ## Draaien van het project
 
-### Lokaal opstarten van kafka
-Download and run kafka from https://kafka.apache.org/quickstart
+### Dependencies voor lokaal starten
+#### Lokaal opstarten van kafka
+https://kafka.apache.org/quickstart
 
-### Opstarten van het project
+#### Lokaal starten van mysql
+https://dev.mysql.com/doc/mysql-getting-started/en/
+
+#### Dependency opstarten
+Het project heeft ook op http://localhost:9000 een service nodig die een AverageTestResults terug kan geven. Deze service bestaat niet, waardoor het ophalen van projecten een 500 gaat opleveren.
+
+#### Opstarten van het project
 `mvn spring-boot:run`
 
 ### Draaien van alle testen
