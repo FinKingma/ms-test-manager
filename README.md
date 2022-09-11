@@ -53,3 +53,39 @@ De microservice kan wel opgestart worden zonder deze service, je krijgt de 500 e
 
 ### Draaien van alle testen
 `mvn test`
+
+## Stappen van de training
+stappen om component testen op te zetten:
+1. Voeg cucumber runner toe met de basic configuratie en de cucumber dependencies (en de spring boot starter test dependency)
+   Voeg vervolgens je eerste feature file toe met een eerste scenarios (step defs zijn nog niet nodig) over het maken van een project
+   resultaat hoort te zijn dat de applicatie nu niet opstart omdat de database niet gevonden wordt
+
+2. Maak een cucumber application yml aan die de database switched naar H2, laat de componenttestconfiguration gebruik maken van het cucumber profile, en voeg H2 dependencies toe
+   resultaat hoort te zijn dat de applicatie nu niet opstart vanwege connectie met kafka
+
+3. Switch de dependency van spring boot starter naar spring-cloud-stream-test-support
+   resultaat hoort nu te zijn dat de applicatie opstart en het scenario faalt op missende stappen
+
+4. Maak de missende ApiSteps
+   hier de focus op goeie herbruikbare step defs (soms ook hele specifieke step defs nodig, maar dat is hier niet het geval)
+   resultaat is dat het scenario nu slaagt
+
+5. Breid de scenarios uit met het ophalen van een project
+   zet hier een breakpoint op een stuk code om te kijken wat faalt
+   resultaat is dat de applicatie een 500 teruggeeft omdat de dependency service niet gevonden kan worden
+
+6. Voeg wiremock rule toe aan CucumberRunnerTest, de wiremock dependency en de mappings
+   resultaat is dat het scenario nu slaagt
+
+7. Voeg nog een extra scenario toe die dekt dat het toevoegen van een scenario uniek moet zijn
+   hiervoor moet je een project aangemaakt hebben in de before, hiervoor gaan we de Dao gebruiken
+   Hiervoor ga je een nieuwe step def class aanmaken TestDataSteps.java
+   resultaat is dat project feature file nu af is
+
+8. Voeg een scenario toe voor het binnenhalen van testdata
+   hiervoor moet een nieuwe EventSteps.java toegevoegd worden met de complexe logica om events te kunnen gebruiken
+
+9. Rating scenario toevoegen
+   We hebben een mock toegevoegd die 70% als average teruggeeft, 10% is de current tolerance. Zet deze waardes bovenaan in je feature file
+   voeg een Scenario Outline toe met 3 examples die een project op GOOD, AVERAGE, en POOR laten uitkomen. Hou hierbij rekening met het gebruik van grenswaardes
+   resultaat is dat we nu klaar zijn
