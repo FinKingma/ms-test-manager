@@ -1,4 +1,4 @@
-package io.componenttesting.testmanager.model;
+package io.componenttesting.testmanager.dao;
 
 import lombok.Data;
 

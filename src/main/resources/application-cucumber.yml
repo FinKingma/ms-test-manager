@@ -1,0 +1,9 @@
+metrics:
+  endpoint: http://localhost:8143
+spring:
+  datasource:
+    url: jdbc:h2:mem:projectDb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    schema:
+    driverClassName: org.h2.Driver

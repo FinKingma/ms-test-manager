@@ -1,0 +1,141 @@
+openapi: "3.0.3"
+info:
+  title: MS Test Manager API
+  version: 1.0.0
+  description: De API voor het beheren van de projecten in de Test Manager ms
+  contact:
+    name: Fin
+    email: fin.kingma@praegus.nl
+paths:
+  /api/projects:
+    get:
+      summary: get all projects
+      operationId: getProjects
+      tags:
+        - projects
+      responses:
+        200:
+          description: projecten
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectResponse'
+    post:
+      summary: Create a project
+      operationId: createProjects
+      tags:
+        - projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+      responses:
+        201:
+          description: OK
+  /api/projects/{projectName}:
+    get:
+      summary: Get a single project
+      operationId: getProject
+      tags:
+        - projects
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        404:
+          description: project not found
+    delete:
+      summary: Delete a single project
+      operationId: deleteProject
+      tags:
+        - projects
+      parameters:
+        - name: projectName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+  /events:
+    get:
+      operationId: events
+      tags:
+        - events
+      responses:
+        200:
+          description: the events that this service is listening to
+          content:
+            text/event-stream:
+              schema:
+                format: event-stream
+                type: object
+                properties:
+                  id:
+                    type: string
+                  eventType:
+                    $ref: '#/components/schemas/EventHeader'
+                  projectName:
+                    description: the project that the testdata is supposed for
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/TestDataEvent'
+
+components:
+  schemas:
+    ProjectResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        rating:
+          $ref: '#/components/schemas/Rating'
+        testdata:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestData'
+    Rating:
+      type: string
+      enum: [ GOOD, AVERAGE, POOR ]
+    TestData:
+      type: object
+      properties:
+        testrunId:
+          type: integer
+        testname:
+          type: string
+        result:
+          type: string
+    ProjectCreate:
+      type: object
+      properties:
+        name:
+          type: string
+    TestDataEvent:
+      type: object
+      properties:
+        project:
+          type: string
+        testRunId:
+          type: integer
+        testName:
+          type: string
+        result:
+          type: string
+    EventHeader:
+      type: string
+      enum: [TEST_EVENT]

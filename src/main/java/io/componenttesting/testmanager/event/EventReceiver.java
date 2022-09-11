@@ -22,11 +22,11 @@ public class EventReceiver {
 
     }
 
-    @StreamListener(value = TestManagerSink.APPLICATIONS_IN, condition = "headers['eventType'] =='TEAM_EVENT'")
-    public void teamMoraleProcessor(@Payload String content, @Header(name = "teamName") String teamName) {
-        LOGGER.info("message received for team {}: {}", teamName, content);
+    @StreamListener(value = TestManagerSink.APPLICATIONS_IN, condition = "headers['eventType'] == T(io.componenttesting.model.EventHeader).TEST_EVENT.getValue()")
+    public void teamMoraleProcessor(@Payload String content, @Header(name = "projectName") String projectName) {
+        LOGGER.info("message received for team {}: {}", projectName, content);
         try {
-            projectService.handleNewHappening(teamName, content);
+            projectService.handleNewHappening(projectName, content);
         } catch (Exception e) {
             LOGGER.error("something tragic has happened: {}",e);
         }

@@ -1,6 +1,5 @@
 package io.componenttesting.testmanager.dao;
 
-import io.componenttesting.testmanager.model.ProjectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;

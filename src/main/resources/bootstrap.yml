@@ -3,6 +3,17 @@ spring:
   application:
     name: ms-team-manager
   cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        loans-in:
+          destination: loans
+          contentType: application/json
+        loans-out:
+          destination: loans
+          contentType: application/json
     config:
       enabled: true
       fail-fast: true

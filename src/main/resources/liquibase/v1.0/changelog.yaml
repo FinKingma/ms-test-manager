@@ -5,6 +5,3 @@ databaseChangeLog:
   - include:
       file: install-testdata.sql
       relativeToChangelogFile: true
-  - include:
-      file: install-sequences.sql
-      relativeToChangelogFile: true

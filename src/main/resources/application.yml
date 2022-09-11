@@ -1,0 +1,23 @@
+metrics:
+  endpoint: http://localhost:9000
+  tolerance: 10
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/MsTestManager
+    username: root
+    password: r00TUser123#
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+      ddl-auto: create-drop
+  liquibase:
+    change-log: classpath:liquibase/changelog.yaml
+  jackson:
+    default-property-inclusion: non_null
+springdoc:
+  api-docs:
+    path: /open-api
+  swagger-ui:
+    path: /

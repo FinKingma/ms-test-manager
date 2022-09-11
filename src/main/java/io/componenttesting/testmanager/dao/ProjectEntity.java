@@ -1,10 +1,8 @@
-package io.componenttesting.testmanager.model;
+package io.componenttesting.testmanager.dao;
 
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
